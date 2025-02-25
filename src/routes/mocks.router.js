@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { generateMockUsers, UserModel } from "../models/User.js"; // Importamos el modelo y la función
-import { PetModel } from "../models/Pet.js"; // Importamos el modelo de mascotas
+import { generateMockUsers, UserModel } from "../models/User.js";
+import { PetModel } from "../models/Pet.js";
 
 const router = Router();
 
@@ -13,8 +13,8 @@ router.get("/mockingpets", (req, res) => {
 });
 
 router.get("/mockingusers", (req, res) => {
-    const users = generateMockUsers(50);  // Generamos 50 usuarios
-    res.json(users);  // Devolvemos los usuarios generados como respuesta JSON
+    const users = generateMockUsers(50);
+    res.json(users);
 });
 
 router.post("/generateData", async (req, res) => {
@@ -25,16 +25,14 @@ router.post("/generateData", async (req, res) => {
     }
 
     try {
-        // Generar usuarios
         const generatedUsers = generateMockUsers(users);
         await UserModel.insertMany(generatedUsers);
 
-        // Generar mascotas
         const generatedPets = [];
         for (let i = 0; i < pets; i++) {
             generatedPets.push({
                 name: `Pet ${i + 1}`,
-                type: "Dog" // O el tipo que prefieras
+                type: "Dog"
             });
         }
         await PetModel.insertMany(generatedPets);
