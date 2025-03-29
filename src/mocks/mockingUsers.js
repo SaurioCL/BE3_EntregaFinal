@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import { faker } from "@faker-js/faker";
 
 export default function generateMockUsers(count) {
   const users = [];
@@ -7,9 +8,8 @@ export default function generateMockUsers(count) {
     const hashedPassword = bcrypt.hashSync("coder123", 10);
     
     const user = {
-      _id: crypto.randomUUID ? crypto.randomUUID() : i + 1,
       name: `User ${i + 1}`,
-      email: `user${i + 1}@example.com`,
+      email: faker.internet.email(),
       password: hashedPassword,
       role,
       pets: []
