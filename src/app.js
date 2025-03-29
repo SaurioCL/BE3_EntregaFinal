@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import { setupSwagger } from './config/swagger.js';
 import mocksRouter from "./routes/mocks.router.js";
 import usersRouter from "./routes/users.router.js";
 import petsRouter from "./routes/pets.router.js";
@@ -11,6 +12,8 @@ app.use("/api/mocks", mocksRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/pets", petsRouter);
 
+setupSwagger(app);
+
 mongoose.connect("mongodb://localhost:27017/mockDB")
     .then(() => {
         console.log("Conexión a MongoDB exitosa");
@@ -18,7 +21,6 @@ mongoose.connect("mongodb://localhost:27017/mockDB")
     .catch((error) => {
         console.error("Error al conectar a MongoDB:", error);
     });
-
 
 const PORT = 3000;
 app.listen(PORT, () => {
