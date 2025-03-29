@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { AdoptionModel } from "../models/Adoption.js";  // Asegúrate de tener este modelo
+import { AdoptionModel } from "../models/Adoption.js";
 import { UserModel } from "../models/User.js";  // Si es necesario
-import { PetModel } from "../models/Pet.js";  // Si es necesario
+import { PetModel } from "../models/Pet.js";    // Si es necesario
 
 const router = Router();
 
-// Ruta para obtener todas las adopciones
+// Obtener todas las adopciones
 router.get("/", async (req, res) => {
   try {
     const adoptions = await AdoptionModel.find();
@@ -15,7 +15,22 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Ruta para crear una adopción
+// ✅ Obtener una adopción por ID
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const adoption = await AdoptionModel.findById(id);
+    if (!adoption) {
+      return res.status(404).json({ message: "Adopción no encontrada" });
+    }
+    res.status(200).json(adoption);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener la adopción", error });
+  }
+});
+
+// Crear una adopción
 router.post("/", async (req, res) => {
   const { user, pet, status } = req.body;
 
@@ -32,7 +47,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Ruta para actualizar el estado de una adopción
+// Actualizar estado de una adopción
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -56,7 +71,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Ruta para eliminar una adopción
+// Eliminar una adopción
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 

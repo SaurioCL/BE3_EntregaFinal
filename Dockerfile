@@ -1,23 +1,20 @@
-  # Etapa de construcción
-  FROM node:14-alpine as build
+# Imagen base oficial de Node.js
+FROM node:18
 
-  WORKDIR /app
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
 
-  COPY package*.json ./
+# Copia los archivos de dependencias
+COPY package*.json ./
 
-  RUN npm install
+# Instala las dependencias
+RUN npm install
 
-  COPY . .
+# Copia todo el resto del código al contenedor
+COPY . .
 
-  RUN npm run build
+# Expone el puerto (el mismo que usas en tu app)
+EXPOSE 3000
 
-  # Etapa de producción
-  FROM node:14-alpine
-
-  WORKDIR /app
-
-  COPY --from=build /app .
-
-  EXPOSE 3000
-
-  CMD ["node", "app.js"]
+# Comando para ejecutar tu app
+CMD ["npm", "start"]
