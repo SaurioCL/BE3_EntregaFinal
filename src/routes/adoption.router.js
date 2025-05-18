@@ -1,11 +1,27 @@
 import { Router } from "express";
 import { AdoptionModel } from "../models/Adoption.js";
-import { UserModel } from "../models/User.js";  // Si es necesario
-import { PetModel } from "../models/Pet.js";    // Si es necesario
+import { UserModel } from "../models/User.js";
+import { PetModel } from "../models/Pet.js";
 
 const router = Router();
 
-// Obtener todas las adopciones
+/**
+ * @swagger
+ * tags:
+ *   name: Adoptions
+ *   description: Endpoints para la gestión de adopciones
+ */
+
+/**
+ * @swagger
+ * /api/adoptions:
+ *   get:
+ *     summary: Obtener todas las adopciones
+ *     tags: [Adoptions]
+ *     responses:
+ *       200:
+ *         description: Lista de adopciones
+ */
 router.get("/", async (req, res) => {
   try {
     const adoptions = await AdoptionModel.find();
@@ -15,10 +31,27 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Obtener una adopción por ID
+/**
+ * @swagger
+ * /api/adoptions/{id}:
+ *   get:
+ *     summary: Obtener una adopción por ID
+ *     tags: [Adoptions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la adopción
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Adopción encontrada
+ *       404:
+ *         description: Adopción no encontrada
+ */
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
     const adoption = await AdoptionModel.findById(id);
     if (!adoption) {
@@ -30,10 +63,36 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Crear una adopción
+/**
+ * @swagger
+ * /api/adoptions:
+ *   post:
+ *     summary: Crear una nueva adopción
+ *     tags: [Adoptions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 type: string
+ *                 description: ID del usuario
+ *               pet:
+ *                 type: string
+ *                 description: ID de la mascota
+ *               status:
+ *                 type: string
+ *                 enum: [pending, adopted, rejected]
+ *     responses:
+ *       201:
+ *         description: Adopción creada
+ *       400:
+ *         description: Faltan datos
+ */
 router.post("/", async (req, res) => {
   const { user, pet, status } = req.body;
-
   if (!user || !pet || !status) {
     return res.status(400).json({ message: "Faltan datos para la adopción" });
   }
@@ -47,7 +106,35 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Actualizar estado de una adopción
+/**
+ * @swagger
+ * /api/adoptions/{id}:
+ *   put:
+ *     summary: Actualizar el estado de una adopción
+ *     tags: [Adoptions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la adopción a actualizar
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [pending, adopted, rejected]
+ *     responses:
+ *       200:
+ *         description: Adopción actualizada
+ *       404:
+ *         description: Adopción no encontrada
+ */
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -71,7 +158,25 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Eliminar una adopción
+/**
+ * @swagger
+ * /api/adoptions/{id}:
+ *   delete:
+ *     summary: Eliminar una adopción
+ *     tags: [Adoptions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la adopción a eliminar
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Adopción eliminada
+ *       404:
+ *         description: Adopción no encontrada
+ */
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 

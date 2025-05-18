@@ -5,16 +5,16 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "API de Usuarios",
+      title: "API de Adopciones",
       version: "1.0.0",
-      description: "Documentación de la API de Usuarios con Swagger",
+      description: "Documentación de la API con Swagger",
     },
   },
-  apis: ["./src/routes/users.router.js"], // Archivos donde están las rutas a documentar
+  apis: ["../src/routes/*.js"], // Archivos donde están las rutas a documentar
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 export function setupSwagger(app) {
-  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
